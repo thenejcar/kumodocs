@@ -1,0 +1,7 @@
+*.pyc
+*.swp
+downloaded/
+log.log
+
+kumodocs/
+Kumodocs.egg-info

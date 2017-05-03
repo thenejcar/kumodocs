@@ -44,9 +44,15 @@ class Client(object):
                                                  message=oa_tools.message_if_missing(client_secrets))
         storage = oa_file.Storage(tokens)
         credentials = storage.get()
+        print credentials
 
         # run_flow requires a wrapped oa_tools.argparse object to handle command line arguments
         flags = argparse.ArgumentParser(parents=[oa_tools.argparser])
+        flags.logging_level="INFO"
+        flags.noauth_local_webserver=False
+        flags.auth_host_port=[8080, 8090]
+        flags.auth_host_name="localhost"
+        print "flags:", flags
         if credentials is None:  # or credentials.invalid:
             if self.has_client_secrets(client_secrets):
                 credentials = oa_tools.run_flow(flow, storage, flags)

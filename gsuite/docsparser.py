@@ -302,6 +302,9 @@ class CommentsParser(object):
         comments = []
         for i, comment in enumerate(contents):
             comment['num'] = i + 1
+            print "raw comment: ",comment
+            comment['content'] = comment['content'].encode('ascii', 'replace')
+            comment['author']['displayName'] = comment['author']['displayName'].encode('ascii', 'replace')
             comments.append(comment_template.format(**comment))
             for j, reply in enumerate(comment['replies']):
                 reply['num'] = j + 1

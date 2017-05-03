@@ -200,12 +200,12 @@ class GSuiteDriver(basedriver.BaseDriver):
         filename = os.path.join(base_dir, 'revision-log.txt')
         with open(filename, 'w') as f:
             self.logger.info(writing_msg.format('revision log'))
-            f.write('chunkedSnapshot')
+            f.write('chunkedSnapshot\n')
             for line in log['chunkedSnapshot']:
-                f.write(str(line) + '\n')
-            f.write('changelog')
+                f.write(json.dumps(line) + '\n')
+            f.write('changelog\n')
             for line in log['changelog']:
-                f.write(str(line) + '\n')
+                f.write(json.dumps(line) + '\n')
 
         filename = os.path.join(base_dir, 'flat-log.txt')
         with open(filename, 'w') as f:
