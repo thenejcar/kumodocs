@@ -345,21 +345,31 @@ class ImageParser(object):
     def get_image_links(self, image_ids, file_id, drive):
         """ Sends url request to google API which returns a link for each image resource, returns
         dictionary of tuples containing those links along with each image_id associated with link"""
-        render_url, request_body, my_headers = self.get_render_request(image_ids=image_ids, file_id=file_id,
-                                                                       drive=drive)
-        try:
-            response, content = self.service._http.request(render_url, method='POST',
-                                                           body=request_body, headers=my_headers)
-        except:
-            log_msg(cls=self, msg='Renderdata url cannot be resolved:\n\trender_url={}\n\t'
-                                  'body={}'.format(render_url, request_body), error_level='debug')
-        else:
-            content = json.loads(content[5:])
-            # keep assocation of image ids with image
-            for i, img_id in enumerate(image_ids):
+
+        print "getting image links for", image_ids
+        return_val = {}
+        for i, img_id in enumerate(image_ids):
+            print "a je to isto prav?", set([img_id])
+            render_url, request_body, my_headers = self.get_render_request(image_ids=set([img_id]), file_id=file_id,
+                                                                           drive=drive)
+            try:
+                response, content = self.service._http.request(render_url, method='POST',
+                                                               body=request_body, headers=my_headers)
+                print "content", content
+                content = json.loads(content[5:])
+            except:
+                log_msg(cls=self, msg='Renderdata url cannot be resolved:\n\trender_url={}\n\t'
+                                      'body={}'.format(render_url, request_body), error_level='debug')
+                print "exception for image id", img_id
+            else:
+                # keep assocation of image ids with image
                 key = 'r' + str(i)
                 content[key] = (content.pop(key), img_id)
-            return content
+
+                return_val.update(content)
+        
+        print "return_val:", return_val
+        return return_val
 
     def get_render_request(self, image_ids, file_id, drive):
         """ Returns url request to retrieve images with image_ids contained in file with file_id"""
