@@ -350,11 +350,12 @@ class ImageParser(object):
         try:
             response, content = self.service._http.request(render_url, method='POST',
                                                            body=request_body, headers=my_headers)
+            content = json.loads(content[5:])
         except:
             log_msg(cls=self, msg='Renderdata url cannot be resolved:\n\trender_url={}\n\t'
                                   'body={}'.format(render_url, request_body), error_level='debug')
+            return {}
         else:
-            content = json.loads(content[5:])
             # keep assocation of image ids with image
             for i, img_id in enumerate(image_ids):
                 key = 'r' + str(i)
